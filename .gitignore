@@ -2,14 +2,14 @@
 # Created by https://www.gitignore.io/api/vapor
 
 ### Vapor ###
-FBChatbot/Config/secrets
+Config/secrets
 
 ### Vapor Patch ###
-FBChatbot/Packages
-FBChatbot/.build
-FBChatbot/xcuserdata
-FBChatbot/*.xcodeproj
-FBChatbot/DerivedData/
-FBChatbot/.DS_Store
+Packages
+.build
+xcuserdata
+*.xcodeproj
+DerivedData/
+.DS_Store
 
 # End of https://www.gitignore.io/api/vapor
