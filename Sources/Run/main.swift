@@ -1,4 +1,5 @@
 import App
+import Darwin
 
 /// We have isolated all of our App's logic into
 /// the App module because it makes our app
@@ -19,7 +20,33 @@ import App
 let config = try Config()
 try config.setup()
 
+
 let drop = try Droplet(config)
 try drop.setup()
+
+guard let botConfig = config.setupBot() else {
+    print("Missing config values")
+    exit(1)
+}
+
+drop.get("webhook") { request in
+    drop.console.print("get webhook", newLine: true)
+	guard let token = request.data["hub.verify_token"]?.string else {
+        drop.console.print("Couldn't get token", newLine: true)
+		throw Abort.badRequest
+	}
+	guard let response = request.data["hub.challenge"]?.string else {
+        drop.console.print("Error in response", newLine: true)
+		throw Abort.badRequest	
+	}
+    
+    if token == botConfig.validationToken {
+        drop.console.print("Everything is correct", newLine: true)
+        return Response(status: .ok, body: response)
+    } else {
+        drop.console.print("Request doesn't come from Facebook", newLine: true)
+        return Response(status: .forbidden)
+    }
+}
 
 try drop.run()
