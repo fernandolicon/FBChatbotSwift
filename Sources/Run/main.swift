@@ -29,7 +29,7 @@ let drop = try Droplet(config)
 try drop.setup()
 
 guard let botConfig = config.setupBot() else {
-    print("Missing config values")
+    drop.console.print("Missing config values", newLine: true)
     exit(1)
 }
 
