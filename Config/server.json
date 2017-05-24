@@ -8,5 +8,14 @@
     
     "//": "It's very rare that a server manages its own TLS.",
     "//": "More commonly, vapor is served behind a proxy like nginx.",
-    "securityLayer": "none"
+    "securityLayer": "none",
+    
+    "//": "Server vars for bot configuration.",
+    "chatbot" :
+    {
+        "appSecret": "$MESSENGER_APP_SECRET",
+        "pageAccessToken": "$MESSENGER_PAGE_ACCESS_TOKEN",
+        "validationToken": "$MESSENGER_VALIDATION_TOKEN",
+        "serverURL": "$SERVER_URL"
+    }
 }
