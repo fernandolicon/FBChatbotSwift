@@ -36,6 +36,11 @@ guard let botConfig = config.setupBot() else {
 drop.get("webhook") { request in
     drop.console.print("Received get", newLine: true)
     
+    if let contentType = request.headers["Content-Type"], contentType.contains("application/json"), let bytes = request.body.bytes {
+        let json = try JSON(bytes: bytes)
+        drop.console.print("Got JSON: \(json)", newLine: true)
+    }
+    
 	guard let token = request.data["hub", "verify_token"]?.string else {
         drop.console.print("Couldn't get token", newLine: true)
 		throw Abort.badRequest
