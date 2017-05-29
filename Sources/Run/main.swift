@@ -68,7 +68,7 @@ drop.post("webhook") { request in
         drop.console.print("", newLine: true)
         return Response(status: .ok)
     }
-    
+    drop.console.print("\(messageJSON)", newLine: true)
     
     return Response(status: .ok, body: "message")
 }
