@@ -61,6 +61,7 @@ drop.post("webhook") { request in
     let json = try JSON(bytes: bytes!)
     let entry: JSON = (json["entry"]?.array?.first!)!
     let messageJSON = entry["messaging"]?.array?.first
+    drop.console.print(messageJSON, newLine: true)
     guard let message = messageJSON?.string else {
         return Response(status: .ok)
     }
