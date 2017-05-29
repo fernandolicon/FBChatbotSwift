@@ -59,8 +59,19 @@ drop.post("webhook") { request in
     let url = "https://graph.facebook.com/v2.6/me/messages?access_token=" + botConfig.pageAccessToken
     let bytes = request.body.bytes
     let json = try JSON(bytes: bytes!)
-    let message = json["message"]
-    drop.console.print(message.debugDescription, newLine: true)
+    drop.console.print("\(json)", newLine: true)
+    guard let entry: JSON = json["entry"]?.array?.first else {
+        drop.console.print("Couldn't get message", newLine: true)
+        return Response(status: .ok)
+    }
+    guard let messageJSON = entry["messaging"]?.array?.first else {
+        drop.console.print("", newLine: true)
+        return Response(status: .ok)
+    }
+    
+    let message = Message(message: messageJSON)
+    drop.console.print(message.textString, newLine: true)
+    
     
     return Response(status: .ok, body: "message")
 }
