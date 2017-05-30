@@ -64,11 +64,16 @@ drop.post("webhook") { request in
         drop.console.print("Couldn't get message", newLine: true)
         return Response(status: .ok)
     }
-    guard let messageJSON = entry["messaging"]?.array?.first else {
-        drop.console.print("", newLine: true)
+    guard entry["object"]?.string == "page" else {
+        drop.console.print("Message doesn't come from Facebook chat", newLine: true)
         return Response(status: .ok)
     }
-    drop.console.print("\(messageJSON)", newLine: true)
+    guard let messageJSON = entry["messaging"]?.array?.first else {
+        drop.console.print("Couldn't get message", newLine: true)
+        return Response(status: .ok)
+    }
+    let newMessage = Message(messagingJSON: messageJSON)
+    drop.console.print(newMessage.description, newLine: true)
     
     return Response(status: .ok, body: "message")
 }
