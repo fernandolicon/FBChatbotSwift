@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import JSON
+import Vapor
 
-class Message {
+struct Message {
     var id: String?
     var text: String?
     var sender: String?
