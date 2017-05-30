@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreLocation
 import JSON
 
 class Message {
@@ -100,7 +99,7 @@ struct Attachment {
             return getURL()
         }
     }
-    var location: CLLocationCoordinate2D?
+    var location: (latitude: Double, longitude: Double)?
     var description: String {
         return getDescription()
     }
@@ -135,7 +134,7 @@ struct Attachment {
                 let latitude = Double(auxString) ?? 0.0
                 auxString = payloadJSON[Keys.CoordinateLong]?.string ?? "0.0"
                 let longitude = Double(auxString) ?? 0.0
-                self.location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                self.location = (latitude: latitude, longitude: longitude)
                 self.attachmentValue = "Latitude: \(latitude), Longitude: \(longitude)"
                 break
             default: break
