@@ -16,8 +16,10 @@ class Message {
     var sender: String?
     var timeStamp: Int?
     var sequence: Int?
-    var read: Bool?
     var attachments: [Attachment]?
+    var description: String {
+        return getDescription()
+    }
     
     struct Keys {
         static let ID = "mid"
@@ -26,26 +28,67 @@ class Message {
         static let Sequence = "seq"
         static let Text = "text"
         static let AttachmentsArray = "attachments"
+        static let Sender = "sender"
+        static let SenderID = "id"
+        static let TimeStamp = "timestamp"
     }
     
     init() {}
     
-    init(entryJSON: JSON) {
-        if let messagingJSON = entryJSON[Keys.MessagingJSON] {
-            if let messageJSON = messagingJSON[Keys.MessageJSON] {
-                let auxString = messageJSON[Keys.Sequence]?.string ?? "0"
-                self.sequence = Int(auxString)
-                self.id = messageJSON[Keys.ID]?.string
-                self.text = messageJSON[Keys.Text]?.string
-                if let attachmentsArrayDict = messageJSON[Keys.AttachmentsArray]?.array {
-                    attachments = [Attachment]()
-                    for attachmentJSON in attachmentsArrayDict {
-                        attachments!.append(Attachment(attachmentJSON: attachmentJSON))
-                    }
+    init(messagingJSON: JSON) {
+        var auxString: String?
+        if let messageJSON = messagingJSON[Keys.MessageJSON] {
+            auxString = messageJSON[Keys.Sequence]?.string
+            self.sequence = auxString != nil ? Int(auxString!) : nil
+            self.id = messageJSON[Keys.ID]?.string
+            self.text = messageJSON[Keys.Text]?.string
+            if let attachmentsArrayDict = messageJSON[Keys.AttachmentsArray]?.array {
+                attachments = [Attachment]()
+                for attachmentJSON in attachmentsArrayDict {
+                    attachments!.append(Attachment(attachmentJSON: attachmentJSON))
+                }
+            }
+            auxString = messageJSON[Keys.TimeStamp]?.string
+            self.timeStamp = auxString != nil ? Int(auxString!) : nil
+        }
+        if let senderDict = messagingJSON[Keys.Sender] {
+            self.sender = senderDict[Keys.SenderID]?.string
+        }
+    }
+    
+    private func getDescription() -> String {
+        var descriptionMessages = [String]()
+        if id != nil {
+            descriptionMessages.append("MessageID: \(id!)")
+        }
+        if text != nil {
+            descriptionMessages.append("Text: \(text!)")
+        }
+        if sender != nil {
+            descriptionMessages.append("SenderID: \(sender!)")
+        }
+        if timeStamp != nil {
+            descriptionMessages.append("TimeStamp: \(timeStamp!)")
+        }
+        if sequence != nil {
+            descriptionMessages.append("Sequence: \(sequence!)")
+        }
+        if attachments != nil {
+            for attachment in attachments! {
+                if attachment.description != "nil" {
+                    descriptionMessages.append("Attachment: [\(attachment.description)]")
                 }
             }
         }
+        var descriptionString = ""
+        for (counter, value) in descriptionMessages.enumerated() {
+            descriptionString += value
+            if counter < descriptionMessages.count - 1 {
+                descriptionString += ", "
+            }
+        }
         
+        return descriptionString != "" ? descriptionString : "nil"
     }
 }
 
@@ -58,6 +101,10 @@ struct Attachment {
         }
     }
     var location: CLLocationCoordinate2D?
+    var description: String {
+        return getDescription()
+    }
+                
     
     struct Keys {
         static let TypeName = "type"
@@ -89,10 +136,32 @@ struct Attachment {
                 auxString = payloadJSON[Keys.CoordinateLong]?.string ?? "0.0"
                 let longitude = Double(auxString) ?? 0.0
                 self.location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                self.attachmentValue = "Latitude: \(latitude), Longitude: \(longitude)"
                 break
             default: break
             }
         }
+    }
+    
+    private func getDescription() -> String {
+        var descriptionMessages = [String]()
+        if type != nil {
+            let typeString = "TypeString: \(type!.rawValue)"
+            descriptionMessages.append(typeString)
+        }
+        if attachmentValue != nil {
+            let attachmentValuestring = "Value: \(attachmentValue!)"
+            descriptionMessages.append(attachmentValuestring)
+        }
+        var descriptionString = ""
+        for (counter, value) in descriptionMessages.enumerated() {
+            descriptionString += value
+            if counter < descriptionMessages.count - 1 {
+                descriptionString += ", "
+            }
+        }
+        
+        return descriptionString != "" ? descriptionString : "nil"
     }
 }
 
