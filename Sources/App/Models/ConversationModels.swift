@@ -9,7 +9,7 @@
 import Foundation
 import Vapor
 
-struct Message {
+final class Message {
     var id: String?
     var text: String?
     var sender: String?
@@ -91,7 +91,7 @@ struct Message {
     }
 }
 
-struct Attachment {
+final class Attachment {
     var type: AttachmentType?
     private var attachmentValue: String?
     var attachmentURL: URL? {
