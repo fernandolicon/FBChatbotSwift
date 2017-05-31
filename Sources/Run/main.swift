@@ -72,8 +72,8 @@ drop.post("webhook") { request in
         drop.console.print("Couldn't get message", newLine: true)
         return Response(status: .ok)
     }
-    let newMessage = Message(messagingJSON: messageJSON)
-    drop.console.print(newMessage.description, newLine: true)
+    //let newMessage = Message(messagingJSON: messageJSON)
+    //drop.console.print(newMessage.description, newLine: true)
     
     return Response(status: .ok, body: "message")
 }
